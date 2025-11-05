@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: assinaturas_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - assinaturas:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: assinaturas
+    networks:
+      - assinaturas
+
+volumes:
+  assinaturas:
+
+networks:
+  assinaturas:
+    driver: bridge
