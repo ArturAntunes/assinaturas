@@ -1,0 +1,42 @@
+<h2>Criar Conta</h2>
+
+<%= form_with model: @user, url: register_path, local: true do |f| %>
+  <% if @user.errors.any? %>
+    <div>
+      <h3>Erros encontrados:</h3>
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, "Nome:" %>
+    <%= f.text_field :name, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :email, "Email:" %>
+    <%= f.email_field :email, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :password, "Senha:" %>
+    <%= f.password_field :password, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :password_confirmation, "Confirmar Senha:" %>
+    <%= f.password_field :password_confirmation, required: true %>
+  </div>
+
+  <div>
+    <%= f.submit "Cadastrar" %>
+  </div>
+<% end %>
+
+<p>
+  Já tem conta? <%= link_to "Faça login", login_path %>
+</p>

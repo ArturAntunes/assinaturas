@@ -1,0 +1,55 @@
+<h2>Meu Dashboard</h2>
+
+<% if @subscription %>
+  <h3>Assinatura Ativa</h3>
+  <p>
+    <strong>Plano:</strong> <%= @subscription.plan.name %><br>
+    <strong>Valor:</strong> <%= @subscription.plan.formatted_price %><br>
+    <strong>Periodicidade:</strong> <%= @subscription.plan.periodicity %><br>
+    <strong>Ativa desde:</strong> <%= @subscription.started_at.strftime('%d/%m/%Y') %>
+  </p>
+  
+  <%= button_to "Cancelar Assinatura", 
+                cancel_customer_subscription_path(@subscription), 
+                method: :patch,
+                data: { confirm: "Tem certeza que deseja cancelar?" } %>
+<% else %>
+  <p>Você não possui assinatura ativa.</p>
+  <%= link_to "Ver Planos Disponíveis", customer_plans_path %>
+<% end %>
+
+<h3>Faturas Recentes</h3>
+<% if @recent_invoices.any? %>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Referência</th>
+        <th>Valor</th>
+        <th>Vencimento</th>
+        <th>Status</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recent_invoices.each do |invoice| %>
+        <tr>
+          <td><%= invoice.reference_month.strftime('%B/%Y') %></td>
+          <td><%= invoice.formatted_amount %></td>
+          <td><%= invoice.due_on.strftime('%d/%m/%Y') %></td>
+          <td><%= invoice.status %></td>
+          <td>
+            <%= link_to "Ver", customer_invoice_path(invoice) %>
+            <% if invoice.can_be_paid? %>
+              | <%= button_to "Pagar", pay_customer_invoice_path(invoice), method: :patch %>
+            <% elsif invoice.open? && !invoice.subscription.active? %>
+              | <em>Cancelada</em>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to "Ver todas as faturas", customer_invoices_path %>
+<% else %>
+  <p>Nenhuma fatura encontrada.</p>
+<% end %>

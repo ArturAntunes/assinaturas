@@ -1,0 +1,21 @@
+<h2>Login</h2>
+
+<%= form_with url: login_path, local: true do |f| %>
+  <div>
+    <%= f.label :email, "Email:" %>
+    <%= f.email_field :email, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :password, "Senha:" %>
+    <%= f.password_field :password, required: true %>
+  </div>
+
+  <div>
+    <%= f.submit "Entrar" %>
+  </div>
+<% end %>
+
+<p>
+  Não tem conta? <%= link_to "Cadastre-se", register_path %>
+</p>

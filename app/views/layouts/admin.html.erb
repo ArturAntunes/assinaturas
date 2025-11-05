@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin - Plataforma de Assinaturas</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header style="background: #f0f0f0; padding: 10px;">
+      <h1>🔧 Área Administrativa</h1>
+      <nav>
+        <span>Admin: <%= current_user.name %></span> |
+        <%= link_to 'Dashboard', admin_dashboard_path %> |
+        <%= link_to 'Planos', admin_plans_path %> |
+        <%= link_to 'Assinaturas', admin_subscriptions_path %> |
+        <%= link_to 'Faturas', admin_invoices_path %> |
+        <%= button_to 'Sair', logout_path, method: :delete, style: 'display: inline;' %>
+      </nav>
+    </header>
+
+    <% if flash[:notice] %>
+      <div style="background: lightgreen; padding: 10px; margin: 10px 0;">
+        ✅ <%= flash[:notice] %>
+      </div>
+    <% end %>
+
+    <% if flash[:alert] %>
+      <div style="background: lightcoral; padding: 10px; margin: 10px 0;">
+        ⚠️ <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <main style="padding: 20px;">
+      <%= yield %>
+    </main>
+
+    <footer style="margin-top: 50px; padding: 20px; border-top: 1px solid #ccc; text-align: center;">
+      <p>Sistema de Assinaturas - Área Administrativa</p>
+    </footer>
+  </body>
+</html>

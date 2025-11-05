@@ -1,0 +1,33 @@
+<h2>Bem-vindo à Plataforma de Assinaturas</h2>
+
+<% unless logged_in? %>
+  <p>Escolha seu plano e comece agora!</p>
+
+  <h3>Planos Disponíveis</h3>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Plano</th>
+        <th>Periodicidade</th>
+        <th>Preço</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @plans.each do |plan| %>
+        <tr>
+          <td><%= plan.name %></td>
+          <td><%= plan.periodicity %></td>
+          <td><%= plan.formatted_price %></td>
+          <td>
+            <%= link_to "Assinar", register_path %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <p>
+    <%= link_to "Faça login", login_path %> ou <%= link_to "Cadastre-se", register_path %>
+  </p>
+<% end %>

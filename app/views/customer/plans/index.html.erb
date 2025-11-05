@@ -1,0 +1,46 @@
+<h2>Planos Disponíveis</h2>
+
+<% if @current_subscription %>
+  <div style="border: 1px solid green; padding: 10px; margin-bottom: 20px;">
+    <h3>Sua Assinatura Atual</h3>
+    <p>
+      <strong>Plano:</strong> <%= @current_subscription.plan.name %><br>
+      <strong>Valor:</strong> <%= @current_subscription.plan.formatted_price %><br>
+      <strong>Status:</strong> <%= @current_subscription.status %>
+    </p>
+  </div>
+<% end %>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Nome do Plano</th>
+      <th>Periodicidade</th>
+      <th>Preço</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @plans.each do |plan| %>
+      <tr>
+        <td><%= plan.name %></td>
+        <td><%= plan.periodicity %></td>
+        <td><%= plan.formatted_price %></td>
+        <td>
+          <% if @current_subscription&.plan_id == plan.id %>
+            <strong>Plano Atual</strong>
+          <% elsif @current_subscription %>
+            <em>Cancele sua assinatura atual primeiro</em>
+          <% else %>
+            <%= button_to "Assinar", 
+                          customer_subscriptions_path, 
+                          params: { plan_id: plan.id },
+                          method: :post %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Voltar ao Dashboard", customer_dashboard_path %>

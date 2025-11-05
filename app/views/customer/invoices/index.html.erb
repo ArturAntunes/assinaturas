@@ -1,0 +1,53 @@
+<h2>Minhas Faturas</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Plano</th>
+      <th>Referência</th>
+      <th>Valor</th>
+      <th>Vencimento</th>
+      <th>Status</th>
+      <th>Data Pagamento</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @invoices.each do |invoice| %>
+      <tr>
+        <td><%= invoice.id %></td>
+        <td><%= invoice.subscription.plan.name %></td>
+        <td><%= invoice.reference_month.strftime('%B/%Y') %></td>
+        <td><%= invoice.formatted_amount %></td>
+        <td><%= invoice.due_on.strftime('%d/%m/%Y') %></td>
+        <td>
+          <% if invoice.paid? %>
+            <span style="color: green;">Pago</span>
+          <% elsif invoice.expired? %>
+            <span style="color: red;">Expirado</span>
+          <% elsif invoice.overdue? %>
+            <span style="color: orange;">Vencido</span>
+          <% else %>
+            <span>Aberto</span>
+          <% end %>
+        </td>
+        <td>
+          <%= invoice.paid_at&.strftime('%d/%m/%Y %H:%M') || '-' %>
+        </td>
+        <td>
+          <%= link_to "Ver", customer_invoice_path(invoice) %>
+          <% if invoice.can_be_paid? %>
+            | <%= button_to "Pagar", pay_customer_invoice_path(invoice), method: :patch %>
+          <% elsif invoice.open? && !invoice.subscription.active? %>
+            | <em>Assinatura cancelada</em>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @invoices %>
+
+<%= link_to "Voltar ao Dashboard", customer_dashboard_path %>

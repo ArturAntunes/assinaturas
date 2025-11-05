@@ -1,0 +1,44 @@
+<h2>Detalhes da Fatura #<%= @invoice.id %></h2>
+
+<div style="border: 1px solid #ccc; padding: 20px; margin: 20px 0;">
+  <h3>Informações da Fatura</h3>
+  <p>
+    <strong>Plano:</strong> <%= @invoice.subscription.plan.name %><br>
+    <strong>Mês de Referência:</strong> <%= @invoice.reference_month.strftime('%B/%Y') %><br>
+    <strong>Valor:</strong> <%= @invoice.formatted_amount %><br>
+    <strong>Data de Vencimento:</strong> <%= @invoice.due_on.strftime('%d/%m/%Y') %><br>
+    <strong>Status:</strong> 
+    <% if @invoice.paid? %>
+      <span style="color: green;">PAGO</span>
+    <% elsif @invoice.expired? %>
+      <span style="color: red;">EXPIRADO</span>
+    <% elsif @invoice.overdue? %>
+      <span style="color: orange;">VENCIDO</span>
+    <% else %>
+      EM ABERTO
+    <% end %>
+    <br>
+    <% if @invoice.paid? %>
+      <strong>Data de Pagamento:</strong> <%= @invoice.paid_at.strftime('%d/%m/%Y às %H:%M') %>
+    <% end %>
+  </p>
+</div>
+
+<% if @invoice.open? %>
+  <% if @invoice.subscription.active? %>
+    <div style="border: 2px solid green; padding: 10px; margin: 20px 0;">
+      <h3>Realizar Pagamento</h3>
+      <p>Esta fatura está em aberto. Clique no botão abaixo para registrar o pagamento.</p>
+      <%= button_to "Pagar Fatura", pay_customer_invoice_path(@invoice), method: :patch %>
+    </div>
+  <% else %>
+    <div style="border: 2px solid red; padding: 10px; margin: 20px 0;">
+      <h3>Fatura não pode ser paga</h3>
+      <p>Esta fatura não pode ser paga porque a assinatura foi cancelada.</p>
+      <p>Para ter uma nova assinatura, <%= link_to "veja nossos planos", customer_plans_path %>.</p>
+    </div>
+  <% end %>
+<% end %>
+
+<%= link_to "Ver todas as faturas", customer_invoices_path %> |
+<%= link_to "Voltar ao Dashboard", customer_dashboard_path %>
