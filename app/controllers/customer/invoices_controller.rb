@@ -20,7 +20,9 @@ module Customer
                         .where(subscriptions: { user_id: current_user.id })
                         .find(params[:id])
 
-      if @invoice.pay!
+      if !@invoice.subscription.active?
+        flash[:alert] = 'Não é possível pagar fatura de assinatura cancelada'
+      elsif @invoice.pay!
         flash[:notice] = 'Pagamento registrado com sucesso!'
       else
         flash[:alert] = 'Não foi possível processar o pagamento'

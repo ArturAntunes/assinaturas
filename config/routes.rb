@@ -60,10 +60,11 @@ Rails.application.routes.draw do
       resources :subscriptions, only: [:create] do
         collection do
           get :me
+          delete :cancel
         end
       end
       
-      resources :invoices, only: [] do
+      resources :invoices, only: [:index, :show] do
         member do
           post :pay
         end

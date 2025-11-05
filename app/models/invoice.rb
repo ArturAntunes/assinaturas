@@ -25,9 +25,13 @@ class Invoice < ApplicationRecord
 
   # Instance Methods
   def pay!
-    return false unless open?
+    return false unless can_be_paid?
 
     update!(status: :paid, paid_at: Time.current)
+  end
+  
+  def can_be_paid?
+    open? && subscription.active?
   end
 
   def mark_as_expired!

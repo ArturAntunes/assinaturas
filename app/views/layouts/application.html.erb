@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Assinaturas</title>
+    <title>Plataforma de Assinaturas</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,6 +11,45 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header>
+      <h1>Plataforma de Assinaturas</h1>
+      <nav>
+        <% if logged_in? %>
+          <span>Olá, <%= current_user.name %></span> |
+          <%= current_user.role %> |
+          <% if admin? %>
+            <%= link_to 'Dashboard Admin', admin_dashboard_path %> |
+            <%= link_to 'Planos', admin_plans_path %> |
+            <%= link_to 'Assinaturas', admin_subscriptions_path %> |
+            <%= link_to 'Faturas', admin_invoices_path %> |
+          <% else %>
+            <%= link_to 'Dashboard', customer_dashboard_path %> |
+            <%= link_to 'Planos', customer_plans_path %> |
+            <%= link_to 'Minhas Faturas', customer_invoices_path %> |
+          <% end %>
+          <%= button_to 'Sair', logout_path, method: :delete %>
+        <% else %>
+          <%= link_to 'Home', root_path %> |
+          <%= link_to 'Login', login_path %> |
+          <%= link_to 'Cadastrar', register_path %>
+        <% end %>
+      </nav>
+    </header>
+
+    <% if flash[:notice] %>
+      <div style="background: lightgreen; padding: 10px;">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+
+    <% if flash[:alert] %>
+      <div style="background: lightcoral; padding: 10px;">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>

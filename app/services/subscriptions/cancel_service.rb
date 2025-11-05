@@ -19,10 +19,18 @@ module Subscriptions
     private
 
     def cancel_subscription
-      subscription.update!(
-        status: :canceled,
-        canceled_at: Time.current
-      )
+      ActiveRecord::Base.transaction do
+        subscription.update!(
+          status: :canceled,
+          canceled_at: Time.current
+        )
+        
+        # Marca faturas em aberto como expiradas quando cancela assinatura
+        subscription.invoices.open.update_all(
+          status: Invoice.statuses[:expired],
+          updated_at: Time.current
+        )
+      end
 
       success(subscription)
     rescue ActiveRecord::RecordInvalid => e
