@@ -1,0 +1,37 @@
+<%= form_with model: [:admin, plan], local: true do |f| %>
+  <% if plan.errors.any? %>
+    <div>
+      <h3>Erros encontrados:</h3>
+      <ul>
+        <% plan.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name, "Nome do Plano:" %>
+    <%= f.text_field :name, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :periodicity, "Periodicidade:" %>
+    <%= f.select :periodicity, options_for_select(Plan.periodicities.map {|key, value| [key.humanize, key]}, plan.periodicity) %>
+  </div>
+
+  <div>
+    <%= f.label :price_cents, "Preço (em centavos):" %>
+    <%= f.number_field :price_cents, required: true %>
+    <small>Ex: 2990 para R$ 29,90</small>
+  </div>
+
+  <div>
+    <%= f.label :active, "Ativo:" %>
+    <%= f.check_box :active %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,35 @@
+<h2>Detalhes da Fatura #<%= @invoice.id %></h2>
+
+<div style="border: 1px solid #ccc; padding: 20px; margin: 20px 0;">
+  <h3>Informações da Fatura</h3>
+  <p>
+    <strong>Cliente:</strong> <%= @invoice.subscription.user.name %> (<%= @invoice.subscription.user.email %>)<br>
+    <strong>Plano:</strong> <%= @invoice.subscription.plan.name %><br>
+    <strong>Mês de Referência:</strong> <%= @invoice.reference_month.strftime('%B/%Y') %><br>
+    <strong>Valor:</strong> <%= @invoice.formatted_amount %><br>
+    <strong>Data de Vencimento:</strong> <%= @invoice.due_on.strftime('%d/%m/%Y') %><br>
+    <strong>Status:</strong> 
+    <% case @invoice.status %>
+    <% when 'paid' %>
+      <span style="color: green;">PAGO</span>
+    <% when 'expired' %>
+      <span style="color: red;">EXPIRADO</span>
+    <% else %>
+      <%= @invoice.status.upcase %>
+    <% end %>
+    <br>
+    <% if @invoice.paid? %>
+      <strong>Data de Pagamento:</strong> <%= @invoice.paid_at.strftime('%d/%m/%Y às %H:%M') %>
+    <% end %>
+    <br>
+    <strong>Criada em:</strong> <%= @invoice.created_at.strftime('%d/%m/%Y às %H:%M') %>
+  </p>
+</div>
+
+<h3>Informações da Assinatura</h3>
+<p>
+  <strong>ID da Assinatura:</strong> <%= link_to @invoice.subscription.id, admin_subscription_path(@invoice.subscription) %><br>
+  <strong>Status da Assinatura:</strong> <%= @invoice.subscription.status %>
+</p>
+
+<%= link_to "Voltar", admin_invoices_path %>

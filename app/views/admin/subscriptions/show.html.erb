@@ -1,0 +1,62 @@
+<h2>Detalhes da Assinatura #<%= @subscription.id %></h2>
+
+<div style="border: 1px solid #ccc; padding: 20px; margin: 20px 0;">
+  <h3>Informações da Assinatura</h3>
+  <p>
+    <strong>Cliente:</strong> <%= @subscription.user.name %> (<%= @subscription.user.email %>)<br>
+    <strong>Plano:</strong> <%= @subscription.plan.name %><br>
+    <strong>Valor:</strong> <%= @subscription.plan.formatted_price %><br>
+    <strong>Periodicidade:</strong> <%= @subscription.plan.periodicity %><br>
+    <strong>Status:</strong> 
+    <% case @subscription.status %>
+    <% when 'active' %>
+      <span style="color: green;">ATIVO</span>
+    <% when 'canceled' %>
+      <span style="color: red;">CANCELADO</span>
+    <% else %>
+      <%= @subscription.status.upcase %>
+    <% end %>
+    <br>
+    <strong>Iniciada em:</strong> <%= @subscription.started_at&.strftime('%d/%m/%Y às %H:%M') || '-' %><br>
+    <% if @subscription.canceled? %>
+      <strong>Cancelada em:</strong> <%= @subscription.canceled_at&.strftime('%d/%m/%Y às %H:%M') %>
+    <% end %>
+  </p>
+</div>
+
+<% if @subscription.active? %>
+  <div style="margin: 20px 0;">
+    <%= button_to "Cancelar Assinatura", 
+                  cancel_admin_subscription_path(@subscription), 
+                  method: :patch,
+                  data: { confirm: "Tem certeza que deseja cancelar esta assinatura?" } %>
+  </div>
+<% end %>
+
+<h3>Faturas desta Assinatura</h3>
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Referência</th>
+      <th>Valor</th>
+      <th>Vencimento</th>
+      <th>Status</th>
+      <th>Pago em</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @subscription.invoices.order(created_at: :desc).each do |invoice| %>
+      <tr>
+        <td><%= invoice.id %></td>
+        <td><%= invoice.reference_month.strftime('%B/%Y') %></td>
+        <td><%= invoice.formatted_amount %></td>
+        <td><%= invoice.due_on.strftime('%d/%m/%Y') %></td>
+        <td><%= invoice.status %></td>
+        <td><%= invoice.paid_at&.strftime('%d/%m/%Y %H:%M') || '-' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Voltar", admin_subscriptions_path %>

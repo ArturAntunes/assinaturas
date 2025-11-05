@@ -1,0 +1,40 @@
+<h2>Gerenciar Planos</h2>
+
+<%= link_to "Novo Plano", new_admin_plan_path %>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Periodicidade</th>
+      <th>Preço</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @plans.each do |plan| %>
+      <tr>
+        <td><%= plan.id %></td>
+        <td><%= plan.name %></td>
+        <td><%= plan.periodicity %></td>
+        <td><%= plan.formatted_price %></td>
+        <td><%= plan.active? ? 'Ativo' : 'Inativo' %></td>
+        <td>
+          <%= link_to "Ver", admin_plan_path(plan) %> |
+          <%= link_to "Editar", edit_admin_plan_path(plan) %> |
+          <%= button_to plan.active? ? "Desativar" : "Ativar", 
+                        toggle_active_admin_plan_path(plan), 
+                        method: :patch %> |
+          <%= button_to "Excluir", 
+                        admin_plan_path(plan), 
+                        method: :delete, 
+                        data: { confirm: "Tem certeza?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @plans %>

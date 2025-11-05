@@ -1,0 +1,55 @@
+<h2>Gerenciar Assinaturas</h2>
+
+<div style="margin-bottom: 20px;">
+  <h3>Filtros</h3>
+  <%= form_with url: admin_subscriptions_path, method: :get, local: true do |f| %>
+    <%= f.label :status, "Status:" %>
+    <%= f.select :status, options_for_select([['Todos', ''], ['Pendente', 'pending'], ['Ativo', 'active'], ['Cancelado', 'canceled']], params[:status]), {}, onchange: 'this.form.submit()' %>
+    
+    <%= f.label :plan_id, "Plano:" %>
+    <%= f.select :plan_id, options_for_select([['Todos', '']] + @plans.map{|p| [p.name, p.id]}, params[:plan_id]), {}, onchange: 'this.form.submit()' %>
+  <% end %>
+</div>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Cliente</th>
+      <th>Plano</th>
+      <th>Status</th>
+      <th>Início</th>
+      <th>Cancelamento</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @subscriptions.each do |subscription| %>
+      <tr>
+        <td><%= subscription.id %></td>
+        <td><%= subscription.user.name %> (<%= subscription.user.email %>)</td>
+        <td><%= subscription.plan.name %></td>
+        <td>
+          <% case subscription.status %>
+          <% when 'active' %>
+            <span style="color: green;"><%= subscription.status %></span>
+          <% when 'canceled' %>
+            <span style="color: red;"><%= subscription.status %></span>
+          <% else %>
+            <%= subscription.status %>
+          <% end %>
+        </td>
+        <td><%= subscription.started_at&.strftime('%d/%m/%Y') || '-' %></td>
+        <td><%= subscription.canceled_at&.strftime('%d/%m/%Y') || '-' %></td>
+        <td>
+          <%= link_to "Ver", admin_subscription_path(subscription) %>
+          <% if subscription.active? %>
+            | <%= button_to "Cancelar", cancel_admin_subscription_path(subscription), method: :patch, data: { confirm: "Tem certeza?" } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @subscriptions %>

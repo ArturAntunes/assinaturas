@@ -1,0 +1,57 @@
+<h2>Dashboard Admin</h2>
+
+<h3>Estatísticas</h3>
+<ul>
+  <li>Total de Clientes: <%= @stats[:total_users] %></li>
+  <li>Assinaturas Ativas: <%= @stats[:active_subscriptions] %></li>
+  <li>Receita Total: R$ <%= (@stats[:total_revenue] / 100.0).round(2) %></li>
+  <li>Faturas Pendentes: <%= @stats[:pending_invoices] %></li>
+</ul>
+
+<h3>Assinaturas Recentes</h3>
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Cliente</th>
+      <th>Plano</th>
+      <th>Status</th>
+      <th>Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recent_subscriptions.each do |subscription| %>
+      <tr>
+        <td><%= subscription.id %></td>
+        <td><%= subscription.user.name %></td>
+        <td><%= subscription.plan.name %></td>
+        <td><%= subscription.status %></td>
+        <td><%= subscription.created_at.strftime('%d/%m/%Y') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h3>Faturas Recentes</h3>
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Cliente</th>
+      <th>Valor</th>
+      <th>Status</th>
+      <th>Vencimento</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recent_invoices.each do |invoice| %>
+      <tr>
+        <td><%= invoice.id %></td>
+        <td><%= invoice.user.name %></td>
+        <td><%= invoice.formatted_amount %></td>
+        <td><%= invoice.status %></td>
+        <td><%= invoice.due_on.strftime('%d/%m/%Y') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

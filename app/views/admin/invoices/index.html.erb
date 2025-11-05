@@ -1,0 +1,56 @@
+<h2>Gerenciar Faturas</h2>
+
+<div style="margin-bottom: 20px;">
+  <h3>Filtros</h3>
+  <%= form_with url: admin_invoices_path, method: :get, local: true do |f| %>
+    <%= f.label :status, "Status:" %>
+    <%= f.select :status, options_for_select([['Todos', ''], ['Aberto', 'open'], ['Pago', 'paid'], ['Expirado', 'expired']], params[:status]), {}, onchange: 'this.form.submit()' %>
+    
+    <%= f.label :month, "Mês:" %>
+    <%= f.month_field :month, value: params[:month], onchange: 'this.form.submit()' %>
+  <% end %>
+</div>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Cliente</th>
+      <th>Plano</th>
+      <th>Referência</th>
+      <th>Valor</th>
+      <th>Vencimento</th>
+      <th>Status</th>
+      <th>Pago em</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @invoices.each do |invoice| %>
+      <tr>
+        <td><%= invoice.id %></td>
+        <td><%= invoice.subscription.user.name %></td>
+        <td><%= invoice.subscription.plan.name %></td>
+        <td><%= invoice.reference_month.strftime('%B/%Y') %></td>
+        <td><%= invoice.formatted_amount %></td>
+        <td><%= invoice.due_on.strftime('%d/%m/%Y') %></td>
+        <td>
+          <% case invoice.status %>
+          <% when 'paid' %>
+            <span style="color: green;"><%= invoice.status %></span>
+          <% when 'expired' %>
+            <span style="color: red;"><%= invoice.status %></span>
+          <% else %>
+            <%= invoice.status %>
+          <% end %>
+        </td>
+        <td><%= invoice.paid_at&.strftime('%d/%m/%Y %H:%M') || '-' %></td>
+        <td>
+          <%= link_to "Ver", admin_invoice_path(invoice) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @invoices %>

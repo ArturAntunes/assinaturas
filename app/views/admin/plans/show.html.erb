@@ -1,0 +1,24 @@
+<h2>Detalhes do Plano</h2>
+
+<p>
+  <strong>Nome:</strong> <%= @plan.name %>
+</p>
+
+<p>
+  <strong>Periodicidade:</strong> <%= @plan.periodicity %>
+</p>
+
+<p>
+  <strong>Preço:</strong> <%= @plan.formatted_price %>
+</p>
+
+<p>
+  <strong>Status:</strong> <%= @plan.active? ? 'Ativo' : 'Inativo' %>
+</p>
+
+<p>
+  <strong>Total de Assinaturas:</strong> <%= @plan.subscriptions.count %>
+</p>
+
+<%= link_to "Editar", edit_admin_plan_path(@plan) %> |
+<%= link_to "Voltar", admin_plans_path %>
