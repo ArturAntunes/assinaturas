@@ -8,8 +8,12 @@ module Admin
       @invoices = @invoices.where(status: params[:status]) if params[:status].present?
       
       if params[:month].present?
-        date = Date.parse(params[:month])
-        @invoices = @invoices.by_month(date)
+        begin
+          date = Date.strptime("#{params[:month]}-01", "%Y-%m-%d")
+          @invoices = @invoices.by_month(date)
+        rescue Date::Error, ArgumentError
+          flash.now[:alert] = "Formato de data inválido"
+        end
       end
 
       @invoices = @invoices.page(params[:page]).per(15)
