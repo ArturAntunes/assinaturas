@@ -2,11 +2,12 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Plans', type: :request do
   describe 'GET /api/v1/plans' do
-    before(:each) do
-      Plan.destroy_all
-    end
     
     context 'with active plans' do
+      before do
+        Plan.destroy_all
+      end
+      
       let!(:active_plan1) { create(:plan, name: 'Basic', price_cents: 1000, active: true) }
       let!(:active_plan2) { create(:plan, name: 'Pro', price_cents: 2000, active: true) }
       let!(:inactive_plan) { create(:plan, name: 'Old', active: false) }
@@ -45,6 +46,10 @@ RSpec.describe 'Api::V1::Plans', type: :request do
     end
 
     context 'with no active plans' do
+      before do
+        Plan.destroy_all
+      end
+      
       it 'returns empty array' do
         get '/api/v1/plans'
         

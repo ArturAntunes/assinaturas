@@ -81,4 +81,7 @@ group :test do
   
   # Matchers for RSpec
   gem "shoulda-matchers", "~> 6.0"
+  
+  # Database cleaning for tests
+  gem "database_cleaner-active_record"
 end
