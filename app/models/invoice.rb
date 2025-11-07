@@ -20,8 +20,6 @@ class Invoice < ApplicationRecord
   scope :overdue, -> { where(status: :open).where('due_on < ?', Date.current) }
   scope :by_month, ->(month) { where(reference_month: month.beginning_of_month) }
 
-  # Callbacks
-  after_create :check_expiration
 
   # Instance Methods
   def pay!
@@ -49,7 +47,7 @@ class Invoice < ApplicationRecord
   end
 
   def formatted_amount
-    "R$ #{format('%.2f', amount_in_reais)}"
+    "R$ #{format('%.2f', amount_in_reais).gsub('.', ',')}"
   end
 
   def user

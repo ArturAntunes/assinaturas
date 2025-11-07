@@ -4,13 +4,13 @@ RSpec.describe 'Admin::Invoices', type: :request do
   let(:admin) { create(:user, :admin) }
   
   before do
-    post '/login', params: { email: admin.email, password: 'password123' }
+    sign_in(admin)
   end
 
   describe 'GET /admin/invoices' do
     let(:subscription) { create(:subscription, :active) }
-    let!(:invoice1) { create(:invoice, subscription: subscription, status: :open) }
-    let!(:invoice2) { create(:invoice, :paid, subscription: subscription) }
+    let!(:invoice1) { create(:invoice, subscription: subscription, status: :open, reference_month: Date.current.beginning_of_month) }
+    let!(:invoice2) { create(:invoice, :paid, subscription: subscription, reference_month: 1.month.ago.beginning_of_month) }
 
     it 'lists all invoices' do
       get '/admin/invoices'

@@ -17,8 +17,8 @@ RSpec.describe Subscriptions::CancelService do
       end
 
       context 'with open invoices' do
-        let!(:open_invoice) { create(:invoice, subscription: subscription, status: :open) }
-        let!(:paid_invoice) { create(:invoice, :paid, subscription: subscription) }
+        let!(:open_invoice) { create(:invoice, subscription: subscription, status: :open, reference_month: Date.current.beginning_of_month) }
+        let!(:paid_invoice) { create(:invoice, :paid, subscription: subscription, reference_month: 1.month.ago.beginning_of_month) }
 
         it 'marks open invoices as expired' do
           service.call

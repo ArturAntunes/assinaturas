@@ -43,7 +43,7 @@ RSpec.describe Invoice, type: :model do
   end
 
   describe 'scopes' do
-    let!(:open_invoice) { create(:invoice, status: :open) }
+    let!(:open_invoice) { create(:invoice, status: :open, due_on: 1.week.from_now) }
     let!(:paid_invoice) { create(:invoice, :paid) }
     let!(:expired_invoice) { create(:invoice, :expired) }
     let!(:overdue_invoice) { create(:invoice, status: :open, due_on: 1.week.ago) }

@@ -1,11 +1,16 @@
 FactoryBot.define do
   factory :invoice do
-    subscription
-    reference_month { Date.current.beginning_of_month }
-    amount_cents { subscription.plan.price_cents }
-    due_on { Date.current + 5.days }
+    association :subscription, factory: :subscription, strategy: :create
+    
+    sequence(:reference_month) { |n| (Date.current - n.months).beginning_of_month }
+    
+    due_on { reference_month + 5.days }
     status { :open }
     paid_at { nil }
+    
+    after(:build) do |invoice|
+      invoice.amount_cents ||= invoice.subscription.plan.price_cents
+    end
 
     trait :paid do
       status { :paid }

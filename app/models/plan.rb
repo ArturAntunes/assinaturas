@@ -20,7 +20,7 @@ class Plan < ApplicationRecord
   end
 
   def formatted_price
-    "R$ #{format('%.2f', price_in_reais)}"
+    "R$ #{format('%.2f', price_in_reais).gsub('.', ',')}"
   end
 
   def periodicity_in_months

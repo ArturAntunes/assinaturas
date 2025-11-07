@@ -7,8 +7,8 @@ RSpec.describe 'Api::V1::Invoices', type: :request do
   describe 'GET /api/v1/invoices' do
     context 'with valid authentication' do
       let(:subscription) { create(:subscription, :active, user: user) }
-      let!(:invoice1) { create(:invoice, subscription: subscription) }
-      let!(:invoice2) { create(:invoice, :paid, subscription: subscription) }
+      let!(:invoice1) { create(:invoice, subscription: subscription, reference_month: Date.current.beginning_of_month) }
+      let!(:invoice2) { create(:invoice, :paid, subscription: subscription, reference_month: 1.month.ago.beginning_of_month) }
 
       it 'returns user invoices' do
         get '/api/v1/invoices', headers: headers

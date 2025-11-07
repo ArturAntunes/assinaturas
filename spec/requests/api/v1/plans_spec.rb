@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Plans', type: :request do
   describe 'GET /api/v1/plans' do
+    before(:each) do
+      Plan.destroy_all
+    end
+    
     context 'with active plans' do
       let!(:active_plan1) { create(:plan, name: 'Basic', price_cents: 1000, active: true) }
       let!(:active_plan2) { create(:plan, name: 'Pro', price_cents: 2000, active: true) }
